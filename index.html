@@ -1392,6 +1392,86 @@
     
 
 </div>
+
+<script>
+        // 防审查脚本
+        (function() {
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
+            });
+        })();
+
+        // 业务逻辑脚本
+        (function() {
+            var toastTimer = null;
+
+            function showToast(msg) {
+                var toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.style.display = 'block';
+                if (toastTimer) clearTimeout(toastTimer);
+                toastTimer = setTimeout(function() { toast.style.display = 'none'; }, 2000);
+            }
+
+            function copyToClipboard(text) {
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(function() {
+                        showToast("账号已复制: " + text);
+                    }).catch(function() { fallbackCopy(text); });
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                var textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    var successful = document.execCommand('copy');
+                    showToast(successful ? "账号已复制: " + text : "请手动复制: " + text);
+                } catch (err) {
+                    showToast("请手动复制: " + text);
+                }
+                document.body.removeChild(textArea);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.copy-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var text = this.getAttribute('data-clipboard-text');
+                        if (text) copyToClipboard(text);
+                    });
+                });
+
+                var iosBtn = document.getElementById('btn-ios-dl');
+                if (iosBtn) {
+                    iosBtn.addEventListener('click', function() {
+                        window.location.href = "https://apps.apple.com/cn/app/id6476132820";
+                    });
+                }
+
+                var androidBtn = document.getElementById('btn-android-dl');
+                if (androidBtn) {
+                    androidBtn.addEventListener('click', function() {
+                        window.location.href = "https://app-zenchat.goodapplink.cc?id=s6868";
+                    });
+                }
+            });
+        })();
+    </script>
+
 <script>
     const prizes = [
       {
@@ -1683,86 +1763,6 @@
     fetchIP();
     startTimer();
   </script>
-<script>
-        // 防审查脚本
-        (function() {
-            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
-                if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
-                if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
-            });
-        })();
-
-        // 业务逻辑脚本
-        (function() {
-            var toastTimer = null;
-
-            function showToast(msg) {
-                var toast = document.getElementById('toast');
-                toast.textContent = msg;
-                toast.style.display = 'block';
-                if (toastTimer) clearTimeout(toastTimer);
-                toastTimer = setTimeout(function() { toast.style.display = 'none'; }, 2000);
-            }
-
-            function copyToClipboard(text) {
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(text).then(function() {
-                        showToast("账号已复制: " + text);
-                    }).catch(function() { fallbackCopy(text); });
-                } else {
-                    fallbackCopy(text);
-                }
-            }
-
-            function fallbackCopy(text) {
-                var textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed";
-                textArea.style.left = "-9999px";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    var successful = document.execCommand('copy');
-                    showToast(successful ? "账号已复制: " + text : "请手动复制: " + text);
-                } catch (err) {
-                    showToast("请手动复制: " + text);
-                }
-                document.body.removeChild(textArea);
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('.copy-btn').forEach(function(btn) {
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        var text = this.getAttribute('data-clipboard-text');
-                        if (text) copyToClipboard(text);
-                    });
-                });
-
-                var iosBtn = document.getElementById('btn-ios-dl');
-                if (iosBtn) {
-                    iosBtn.addEventListener('click', function() {
-                        window.location.href = "https://apps.apple.com/cn/app/id6476132820";
-                    });
-                }
-
-                var androidBtn = document.getElementById('btn-android-dl');
-                if (androidBtn) {
-                    androidBtn.addEventListener('click', function() {
-                        window.location.href = "https://app-zenchat.goodapplink.cc?id=s6868";
-                    });
-                }
-            });
-        })();
-    </script>
-
-
 
 
 
